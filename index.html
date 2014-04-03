@@ -16,7 +16,7 @@
 
 <div class="container">
 	<h1>Should I run my fucking sprinkler today?</h1>
-	<h1 id="answer">yes</h1>
+	<h1 id="answer"></h1>
 	<button id="again" class="btn btn-default btn-sm">how about now?</button>
 </div>
 
@@ -24,16 +24,51 @@
 
 <script>
 
-function reload() {
+function setLoading(maxPrecipVal) {
 	// select destination for answer
 	var dest = $("#answer");
 
-	// set answer to no
-	if (0) {
-		dest.addClass("alert alert-danger").text("No");
+	// set answer based on raininess
+	dest.addClass("alert alert-info").text("hold your fucking horses...");
+}
+
+function maxPrecip(forecast) {
+	var maxPrecipProb = Math.max.apply(Math,forecast.hourly.data.map(function(d){return d.precipProbability;}))
+	return maxPrecipProb;
+}
+
+function getForecast(callback) {
+	var url = "https://api.forecast.io/forecast/1cddcbfc9bd6d9848215a76d514042e4/37.8267,-122.423"
+	$.ajax({
+		url: url,
+		jsonp: "callback",
+		dataType: "jsonp",
+		success: function(data) {
+			var result = maxPrecip(data);
+			callback(result);
+		},
+		error: function() {
+			callback(0);
+		}
+	});
+}
+
+function setAnswer(maxPrecipVal) {
+	// select destination for answer
+	var dest = $("#answer");
+
+	// set answer based on raininess
+	if (maxPrecipVal < 0.3) {
+		dest.addClass("alert alert-warning").text("Not if you ran it fucking yesterday! We're in a fucking drought you know!");		
 	} else {
-		dest.addClass("alert alert-success").text("Yes");		
+		var percentChance = (maxPrecipVal * 100).toFixed(0);
+		dest.addClass("alert alert-danger").text("No, you fool! There's a fucking "+percentChance+"% chance of rain in the next couple days!");
 	}
+}
+
+function reload() {
+	setLoading();
+	getForecast(setAnswer);
 }
 
 $(function() {
