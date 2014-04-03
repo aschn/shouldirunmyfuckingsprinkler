@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+	<meta charset="utf-8" />
+
+	<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+	<title>Should I run my fucking sprinkler?</title>
+</head>
+
+<body>
+
+<div class="container">
+	<h1>Should I run my fucking sprinkler today?</h1>
+	<h1 id="answer">yes</h1>
+	<button id="again" class="btn btn-default btn-sm">how about now?</button>
+</div>
+
+</body>
+
+<script>
+
+function reload() {
+	// select destination for answer
+	var dest = $("#answer");
+
+	// set answer to no
+	if (0) {
+		dest.addClass("alert alert-danger").text("No");
+	} else {
+		dest.addClass("alert alert-success").text("Yes");		
+	}
+}
+
+$(function() {
+	// load page
+	reload();
+
+	// button click
+	$("#again").on("click", function(e) {reload();});
+});
+
+</script>
+
+</html>
