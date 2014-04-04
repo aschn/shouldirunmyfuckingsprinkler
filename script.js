@@ -3,8 +3,11 @@ function setLoading(maxPrecipVal) {
 	// select destination for answer
 	var dest = $("#answer");
 
+	// adjust class
+	dest.removeClass("alert-warning alert-danger").addClass("alert alert-info");
+
 	// set answer based on raininess
-	dest.addClass("alert alert-info").text("hold your fucking horses...");
+	dest.text("hold your fucking horses...");
 }
 
 function precipStats(forecast) {
@@ -83,8 +86,11 @@ function setMesasge(choices, data, alertLevel) {
 	// make substitution
 	var msg = template.replace("{0}", data);
 
+	// adjust class
+	dest.removeClass("alert-info alert-warning alert-danger").addClass("alert alert-"+alertLevel);
+
 	// set message
-	dest.addClass("alert alert-"+alertLevel).text(msg);
+	dest.text(msg);
 }
 
 function showAnswer(data) {
