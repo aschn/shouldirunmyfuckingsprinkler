@@ -1,0 +1,50 @@
+/* https://gist.github.com/thebigreason/1296097 */
+/* This gets Google to fall into place 
+.social {
+	font-size: 1px;
+}
+ */
+/* This gets Facebook to fall into place */
+.social iframe {
+	vertical-align: middle;
+}
+ 
+/* Set an optional width for your button wrappers */
+.social span {
+	display: inline-block;
+	width: 70px;
+}
+ 
+/* Adjust the widths individually if you like 
+.social .google {
+	width: 75px;
+} */
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+.container .text-muted {
+  margin: 10px 0;
+}

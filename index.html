@@ -4,142 +4,86 @@
 
 <head>
 	<meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Should I run my fucking sprinkler?">
+    <meta name="author" content="Anna Schneider and Lester Hedges">
 
 	<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
+
 	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script type="application/javascript" src="http://l2.io/ip.js?var=myip"> </script>
+	<script type="application/javascript" src="script.js"></script>
 
 	<title>Should I run my fucking sprinkler?</title>
 </head>
 
 <body>
+<!-- facebook -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "http://connect.facebook.net/en_GB/all.js#xfbml=1&appId=411609345605022";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
 <div class="container">
-	<h1>Should I run my fucking sprinkler today?</h1>
-	<h1 id="answer"></h1>
-	<button id="again" class="btn btn-default btn-sm">how about now?</button>
+	<div class="row" id="msg">
+		<div class="col-md-12 text-center">
+			<h1>Should I run my fucking sprinkler today?</h1>
+			<h1 id="answer"></h1>
+			<button id="again" class="btn btn-primary btn-sm">how about now?</button>
+		</div>
+	</div>
+
+	<div class="row" style="padding-top:80px;">
+		<div class="col-sm-6">
+			<p>
+				Should your friends run their fucking sprinklers?
+				Probably not!
+			</p>
+			<div class="social">
+				<span class="twitter">
+					<a href="https://twitter.com/share" class="twitter-share-button" data-text="Should I run my fucking sprinkler? Probably not." data-count="none" data-hashtags="shouldirunmyfuckingsprinkler">Tweet</a>
+				</span>
+				<span class="Facebook">
+					<div class="fb-share-button" data-href="http://aschn.github.io/shouldirunmyfuckingsprinkler/" data-type="button"></div>
+				</span>
+			</div>
+		</div>
+
+		<div class="col-sm-6">
+			<p>
+				California is in a fucking drought!
+				One of the easiest ways to conserve water is to run your lawn sprinklers less often.
+				But UC Berkeley still runs their sprinklers frequently, even when it's fucking raining out!
+				Call <a href="http://physicalplant.berkeley.edu/">the staff</a> and complain: (510) 642-1032
+			</p>
+		</div>
+	</div> <!-- end row -->
+
+</div> <!-- end container -->
+
+<div id="footer">
+	<div class="container">
+		<p class="text-muted">
+			#shouldirunmyfuckingsprinkler made by Anna Schneider and Lester Hedges.
+			Thanks to <a href="https://developer.forecast.io/">Forecast.io</a> for data,
+			<a href="https://pages.github.com/">GitHub Pages</a> for hosting,
+			and <a href="http://getbootstrap.com/">Bootstrap</a> for being your beautiful self.
+		</p>
+	</div>
 </div>
+
+<!-- twitter -->
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
 </body>
 
-<script type="application/javascript" src="http://l2.io/ip.js?var=myip"> </script>
-<script>
-
-function setLoading(maxPrecipVal) {
-	// select destination for answer
-	var dest = $("#answer");
-
-	// set answer based on raininess
-	dest.addClass("alert alert-info").text("hold your fucking horses...");
-}
-
-function precipStats(forecast) {
-	var maxPrecipProb = Math.max.apply(Math,forecast.hourly.data.map(function(d){return d.precipProbability;}))
-	var nowPrecipProb = forecast.currently.precipProbability;
-	var result = {'max': maxPrecipProb, 'now': nowPrecipProb};
-	return result;
-}
-
-function start() {
-	// step 1 is get location
-	$.ajax({
-		url: "http://freegeoip.net/json/"+myip,
-		jsonp: "callback",
-		dataType: "jsonp",
-		success: function(data) {
-			var latlon = data.latitude + "," + data.longitude;
-			getForecast(latlon);
-		},
-		error: function(e) {
-			console.log(e);
-		}
-	});
-}
-
-function getForecast(latlon) {
-	// step 2 is get forecast
-
-	// set up url
-	var url = "https://api.forecast.io/forecast/1cddcbfc9bd6d9848215a76d514042e4/"+latlon;
-
-	// call to API
-	$.ajax({
-		url: url,
-		jsonp: "callback",
-		dataType: "jsonp",
-		success: function(data) {
-			var result = precipStats(data);
-			showAnswer(result);
-		},
-		error: function() {
-			showAnswer(0);
-		}
-	});
-}
-
-var rainingNow = [
-	"You've got to be kidding me, go look out the fucking window at the rain! NO.",
-	"No! Are you in a fucking windowless room? It's raining right now!",
-	"No fucking no! It's raining right the fuck now!",
-	"For fuck's sake, no! That stuff falling from the sky is fucking WATER.",
-	"What the fuck, no! Go play in the fucking rain instead.",
-	"Uh, thanks for asking, but look out your window... It's fucking raining! NO.",
-]
-
-var rainingSoon = [
-	"No, you fool! There's a fucking {0}% chance of rain in the next couple of days!",
-	"No way in hell! There's a fucking {0}% chance of rain in the next couple of days.",
-]
-
-var notRainingSoon = [
-	"Not if you ran it fucking yesterday! We're in a fucking drought you know!",
-	"No, your fucking lawn isn't special. Go buy some drought resistant plants instead!",
-	"Ok, but only if you didn't have a shower today, you smelly fucking bastard. We're in a fucking drought!",
-	"Ok, but only if you haven't flushed the toilet lately. We're in a fucking drought!",
-]
-
-function setMesasge(choices, data, alertLevel) {
-	// select destination for answer
-	var dest = $("#answer");
-
-	// choose random message
-	var i = Math.floor(Math.random()*choices.length);
-	var template = choices[i];
-
-	// make substitution
-	var msg = template.replace("{0}", data)
-
-	// set message
-	dest.addClass("alert alert-"+alertLevel).text(msg);
-}
-
-function showAnswer(data) {
-	// step 3 is show answer
-
-	// set answer based on raininess
-	if (data.now > 0.9) {
-		setMesasge(rainingNow, [], 'danger')
-	} else if (data.max > 0.3) {
-		var percentChance = (data.max * 100).toFixed(0);
-		setMesasge(rainingSoon, percentChance, 'danger')
-	} else {
-		setMesasge(notRainingSoon, [], 'warning')
-	}
-}
-
-function reload() {
-	setLoading();
-	start();
-}
-
-$(function() {
-	// load page
-	reload();
-
-	// button click
-	$("#again").on("click", function(e) {reload();});
-});
-
-</script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 </html>
