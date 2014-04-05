@@ -1,3 +1,19 @@
+var cache = {
+	'date': new Date(),
+	'precipStats': null,
+	'timeOut': 5*1000*60, // timeout in 5 minutes
+};
+
+function cacheInvalid() {
+	if (cache.precipStats === null) {
+		// if no precip stats, invalid
+		return true;
+	} else {
+		// cache age in milliseconds
+		var cache_age = (new Date()).getTime() - cache.date.getTime();
+		return (cache_age > cache.timeOut);
+	}
+}
 
 function setLoading(maxPrecipVal) {
 	// select destination for answer
@@ -45,7 +61,14 @@ function getForecast(latlon) {
 		jsonp: "callback",
 		dataType: "jsonp",
 		success: function(data) {
+			// compute forecast stats
 			var result = precipStats(data);
+
+			// update cache
+			cache.precipStats = result;
+			cache.date = new Date();
+
+			// return
 			showAnswer(result);
 		},
 		error: function() {
@@ -108,8 +131,14 @@ function showAnswer(data) {
 }
 
 function reload() {
-	setLoading();
-	start();
+	if (cacheInvalid()) {
+		// get and show new data
+		setLoading();
+		start();
+	} else {
+		// show answer based on cached data
+		showAnswer(cache.precipStats);
+	}
 }
 
 $(function() {
