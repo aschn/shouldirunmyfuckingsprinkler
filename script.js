@@ -1,8 +1,45 @@
+/*********************/
+/* GLOBAL VARIABLES  */
+/*********************/
+
 var cache = {
 	'date': new Date(),
 	'precipStats': null,
 	'timeOut': 5*1000*60, // timeout in 5 minutes
 };
+
+var rainingNow = [
+	"Hey sucka, go look out the fucking window at the rain! NO.",
+	"No! Are you in a fucking windowless room? It's raining right now!",
+	"No fucking no! It's raining right the fuck now!",
+	"For fuck's sake, no! That stuff falling from the sky is fucking WATER.",
+	"What the fuck, no! Go play in the fucking rain instead.",
+	"Uh, thanks for asking, but look out your window... It's fucking raining! NO.",
+];
+
+var rainingSoon = [
+	"No, fool! There's a fucking {0}% chance of rain in the next couple of days!",
+	"No way in hell! There's a fucking {0}% chance of rain in the next couple of days.",
+	"No, you see those fucking clouds? There's a {0}% chance of rain in the next couple of days!",
+	"Don't do it! Mr. T pities the fool who waters their fucking lawn when there's a {0}% chance of rain.",
+	"Nope, there's a fucking {0}% chance of rain in the next couple of days! Maybe next week?",
+];
+
+var notRainingSoon = [
+	"Not if you ran it fucking yesterday! Conserve some water, yo.",
+	"Not if you're going to run it tomorrow! Better yet, use fucking greywater.",
+	"No, your fucking lawn isn't special. Grow some drought resistant plants!",
+	"Ok, but only if you didn't shower today! Drought is dirty fucking business.",
+	"Ok, but only if you haven't flushed the toilet lately! It'll be fucking dry later this week.",
+];
+
+var loading = [
+	"hold your fucking horses...",
+];
+
+/*********************/
+/* HELPER FUNCTIONS  */
+/*********************/
 
 function cacheInvalid() {
 	if (cache.precipStats === null) {
@@ -15,23 +52,42 @@ function cacheInvalid() {
 	}
 }
 
-function setLoading(maxPrecipVal) {
-	// select destination for answer
-	var dest = $("#answer");
-
-	// adjust class
-	dest.removeClass("alert-warning alert-danger").addClass("alert alert-info");
-
-	// set answer based on raininess
-	dest.text("hold your fucking horses...");
-}
-
 function precipStats(forecast) {
+	// compute stats from forecast
 	var maxPrecipProb = Math.max.apply(Math,forecast.hourly.data.map(function(d){return d.precipProbability;}));
 	var nowPrecipProb = forecast.currently.precipProbability;
+
+	// return result
 	var result = {'max': maxPrecipProb, 'now': nowPrecipProb};
 	return result;
 }
+
+function setLoading() {
+	// show loading message
+	setMesasge(loading, [], "info");
+}
+
+function setMesasge(choices, data, alertLevel) {
+	// select destination for answer
+	var dest = $("#answer");
+
+	// choose random message
+	var i = Math.floor(Math.random()*choices.length);
+	var template = choices[i];
+
+	// make substitution
+	var msg = template.replace("{0}", data);
+
+	// adjust class
+	dest.removeClass("alert-info alert-warning alert-danger").addClass("alert alert-"+alertLevel);
+
+	// set message
+	dest.text(msg);
+}
+
+/*********************/
+/* LOGIC FLOW        */
+/*********************/
 
 function start() {
 	// step 1 is get location
@@ -77,49 +133,6 @@ function getForecast(latlon) {
 	});
 }
 
-var rainingNow = [
-	"You've got to be kidding me, go look out the fucking window at the rain! NO.",
-	"No! Are you in a fucking windowless room? It's raining right now!",
-	"No fucking no! It's raining right the fuck now!",
-	"For fuck's sake, no! That stuff falling from the sky is fucking WATER.",
-	"What the fuck, no! Go play in the fucking rain instead.",
-	"Uh, thanks for asking, but look out your window... It's fucking raining! NO.",
-];
-
-var rainingSoon = [
-	"No, you fool! There's a fucking {0}% chance of rain in the next couple of days!",
-	"No way in hell! There's a fucking {0}% chance of rain in the next couple of days.",
-	"No, you see those fucking clouds? There's a {0}% chance of rain in the next couple of days!",
-	"Weatherman says no! There's a fucking {0}% chance of rain in the next couple of days.",
-	"No, there's a fucking {0}% chance of rain in the next couple of days! Maybe next week?",
-];
-
-var notRainingSoon = [
-	"Not if you ran it fucking yesterday!",
-	"Not if you're going to fucking run it tomorrow!",
-	"No, your fucking lawn isn't special. Go buy some drought resistant plants instead!",
-	"Ok, but only if you didn't have a fucking shower today!",
-	"Ok, but only if you haven't flushed the fucking toilet lately!",
-];
-
-function setMesasge(choices, data, alertLevel) {
-	// select destination for answer
-	var dest = $("#answer");
-
-	// choose random message
-	var i = Math.floor(Math.random()*choices.length);
-	var template = choices[i];
-
-	// make substitution
-	var msg = template.replace("{0}", data);
-
-	// adjust class
-	dest.removeClass("alert-info alert-warning alert-danger").addClass("alert alert-"+alertLevel);
-
-	// set message
-	dest.text(msg);
-}
-
 function showAnswer(data) {
 	// step 3 is show answer
 
@@ -133,6 +146,10 @@ function showAnswer(data) {
 		setMesasge(notRainingSoon, [], 'warning');
 	}
 }
+
+/*********************/
+/* MAIN              */
+/*********************/
 
 function reload() {
 	if (cacheInvalid()) {
