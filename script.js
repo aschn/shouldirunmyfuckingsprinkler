@@ -89,13 +89,17 @@ var rainingNow = [
 var rainingSoon = [
 	"No, you fool! There's a fucking {0}% chance of rain in the next couple of days!",
 	"No way in hell! There's a fucking {0}% chance of rain in the next couple of days.",
+	"No, you see those fucking clouds? There's a {0}% chance of rain in the next couple of days!",
+	"Weatherman says no! There's a fucking {0}% chance of rain in the next couple of days.",
+	"No, there's a fucking {0}% chance of rain in the next couple of days! Maybe next week?",
 ];
 
 var notRainingSoon = [
-	"Not if you ran it fucking yesterday! We're in a fucking drought you know!",
+	"Not if you ran it fucking yesterday!",
+	"Not if you're going to fucking run it tomorrow!",
 	"No, your fucking lawn isn't special. Go buy some drought resistant plants instead!",
-	"Ok, but only if you didn't have a shower today, you smelly fucking bastard. We're in a fucking drought!",
-	"Ok, but only if you haven't flushed the toilet lately. We're in a fucking drought!",
+	"Ok, but only if you didn't have a fucking shower today!",
+	"Ok, but only if you haven't flushed the fucking toilet lately!",
 ];
 
 function setMesasge(choices, data, alertLevel) {
